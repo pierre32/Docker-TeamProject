@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <title>Apache Webserver on Ubuntu</title>
+</head>
+<!-- Nav Bar -->
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.html">Docker</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="about.html">About<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="team.html">Author</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More on docker
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="virtualization.html">Virtualization</a>
+                    <a class="dropdown-item" href="containerization.html">containerization</a>
+                    <a class="dropdown-item" href="compare.html">VM vs Containers</a>
+                    <a class="dropdown-item active" href="webserver.html">Webserver on Docker</a>
+                    <a class="dropdown-item" href="linux.html">Basic Linux commands</a>
+                    <a class="dropdown-item" href="connect.html">Python, pycharm & Docker</a>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="jumbotron">
+    <h1 class="display-5">How to setup a web server on your local computer using docker</h1>
+    <img src="images/container.jpg" class="card-img img-fluid" alt="...">
+</div>
+
+<div class="container d-flex h-100">
+    <div class="row justify-content-center align-self-center">
+        <div class="col-7 mx-auto" style="font-family: Helvetica">
+            <div class="card-body">
+            <p>1- Create a local directory/folder using the following command in terminal</p>
+            <pre> <code> $ mkdir webservertutorial </code></pre>
+            <p>This will create an empty folder in your current location</p>
+            <img src="images/1.png" class="img-fluid" alt="...">
+            <p>This will create an empty folder in your current location</p>
+
+            <p>2- Get into the folder with this command</p>
+            <pre> <code>$cd webservertutorial</code></pre>
+
+            <p>3- Create a dockerfile,a file that has set of instruction that will be executed when we run the
+                server. Use the following command if you have vim installed</p>
+            <pre> <code>$vim Dockerfile</code></pre>
+            <img src="images/3.png" class="img-fluid" alt="...">
+
+            <p>4- Type the following</p>
+            <pre> <code>
+                    FROM ubuntu
+                    ENV TZ=EST5EDT
+                    RUN ln -snf /usr/share/zoneinfo/$TZ /
+                    etc/localtime && echo $TZ > /etc/timezone
+                    RUN apt-get update
+                    RUN apt-get install -y apache2
+                    Run apt-get install -y apache2-utils
+                    EXPOSE 80
+                    ENTRYPOINT ["apache2ctl"]
+                    CMD [“-D", "FOREGROUND"]
+                </code></pre>
+            <ul>
+                <li>Create our image to be from the Ubuntu base image.</li>
+                <li>ENV TZ will pickup local time zone needed to run apache2</li>
+                <li>RUN command to update all the packages on the Ubuntu system</li>
+                <li>RUN command to install apache2 on our image.</li>
+                <li>RUN command to install the necessary utility apache2 packages on our image.</li>
+                <li>RUN command to clean any unnecessary files from the system.</li>
+                <li>EXPOSE command is used to expose port 80 of Apache in the container to the Docker host.</li>
+                <li>CMD command is used to run apache2 in the background</li>
+            </ul>
+            <p><kbd>:wq </kbd> To write and quite (save and exit)</p>
+
+            <p>5- Run the following to see if the file is saved</p>
+            <pre> <code>$ls</code></pre>
+            <img src="images/5.png" class="img-fluid" alt="...">
+
+            <p>6- Run the following command to build the container</p>
+            <pre> <code>$ docker build -t="mywebserver" .</code></pre>
+            <img src="images/6.png" class="img-fluid" alt="...">
+
+            <p>7- Run this to see if the new image is created</p>
+            <pre> <code>$ docker images</code></pre>
+            <img src="images/7.png" class="img-fluid" alt="...">
+
+            <p>8- Once the image is build, we can run the following command to create a container and expose port 80
+                for our web server</p>
+            <pre> <code>$ docker run -i -p 808:80 -td mywebserve</code></pre>
+            <ul>
+                <li>-p: Publish port 808</li>
+                <li>-d: let the container run in the detached mode/ in the background</li>
+                <li>-i: Interactive</li>
+                <li>-t: tty</li>
+                <li>-d: Detach</li>
+            </ul>
+            <img src="images/8.png" class="img-fluid" alt="...">
+
+            <p>9-Check the container list with</p>
+            <pre> <code>$ docker ps</code></pre>
+            <p>10-Check the following in your web browser</p>
+            <pre> <code>http://localhost:808</code></pre>
+            <img src="images/10.png" class="img-fluid" alt="...">
+        </div>
+    </div>
+</div>
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+</body>
+</html>
